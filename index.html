@@ -244,9 +244,9 @@
   <section class="home-block" style="padding-bottom:48px">
     <div class="wrap">
       <div class="stats">
-        <div class="stat"><div class="num">15</div><div class="lab">Journal papers</div></div>
-        <div class="stat"><div class="num">9</div><div class="lab">First-author</div></div>
-        <div class="stat"><div class="num">3</div><div class="lab">Manuscripts submitted / in prep.</div></div>
+        <div class="stat"><div class="num">16</div><div class="lab">Journal papers</div></div>
+        <div class="stat"><div class="num">10</div><div class="lab">First-author</div></div>
+        <div class="stat"><div class="num">2</div><div class="lab">Manuscripts submitted / in prep.</div></div>
         <div class="stat"><div class="num">4</div><div class="lab">Academic awards</div></div>
       </div>
     </div>
@@ -431,6 +431,7 @@
         <button class="filter" data-f="2024">2024 <i></i></button>
         <button class="filter" data-f="2023">2023 <i></i></button>
         <button class="filter" data-f="2022">2022 <i></i></button>
+        <button class="filter" data-f="2021">2021 <i></i></button>
       </div>
       <div class="pub-count" id="pubcount" aria-live="polite"></div>
       <div id="publist"></div>
@@ -516,7 +517,7 @@
 const pubs=[
  {n:18,t:2,y:"2026",first:true,status:"In preparation",title:"Sustainable hydrogen production from sewage sludge via integrated solid oxide electrolysis: system-level analysis",authors:["Sihwan Park†","Vira Valasara†","Wangyun Won*"],note:"co-first"},
  {n:17,t:2,y:"2026",first:true,status:"Submitted",title:"An integrated strategy for the production of methanol from flue gas with simultaneous CO₂ capture and electroreduction: process development and environmental techno-economic assessment",authors:["Sihwan Park","Sungil Yun","Byeongchan Ahn","Wangyun Won*"],venue:"Green Energy & Environment"},
- {n:16,t:1,y:"2026",first:true,status:"Under review",title:"Design and comprehensive thermodynamic and economic analysis of hydrogen liquefaction processes: from process to value-chain level",authors:["Sihwan Park","Wangyun Won*","Inkyu Lee*"]},
+ {n:16,t:1,y:"2026",first:true,status:"Accepted",venue:"Applied Thermal Engineering",title:"Techno-economic impact of liquefaction improvements on the liquid hydrogen value chain: Bridging efficiency and economics",authors:["Sihwan Park","Wangyun Won*","Inkyu Lee*"]},
  {n:15,t:1,y:"2026",title:"Utilization of liquid-hydrogen cold energy and electric heating in green olefin production: techno-economic and environmental analysis",authors:["Duho Kang","Hyeonju Cho","Sihwan Park","Inkyu Lee*"],venue:"Applied Thermal Engineering",doi:"https://doi.org/10.1016/j.applthermaleng.2026.132401"},
  {n:14,t:2,y:"2026",title:"Co-utilization of CO₂ and biomass in sustainable methanol production: enhancing cost competitiveness and sustainability",authors:["Hyewon Jeong","Sihwan Park","Seoyeon Cho","Inkyu Lee*"],venue:"Energy Conversion and Management",doi:"https://doi.org/10.1016/j.enconman.2025.120602"},
  {n:13,t:1,y:"2025",first:true,title:"Conceptual design for enhancing thermodynamic efficiency in hydrogen liquefaction based on a triple-pressure Claude cycle and bypass configuration",authors:["Sihwan Park","Duho Kang","Jeongheon Kim","Minseo Jeong","Haksung Kim","Moonsuk Choi","Inkyu Lee*"],venue:"Applied Thermal Engineering",doi:"https://doi.org/10.1016/j.applthermaleng.2025.127643"},
@@ -531,7 +532,8 @@ const pubs=[
  {n:4,t:2,y:"2024",first:true,title:"Cost-optimization methodology based on carbon-techno-economic analysis: application to post-combustion carbon capture",authors:["Sihwan Park","Haneul Mun","Jinwoo Park*","Inkyu Lee*"],venue:"Journal of Cleaner Production",doi:"https://doi.org/10.1016/j.jclepro.2023.139887"},
  {n:3,t:1,y:"2023",title:"Liquid-hydrogen cold-energy recovery to enhance sustainability: optimal design of dual-stage power generation cycles",authors:["Haneul Mun","Sihwan Park","Inkyu Lee*"],venue:"Energy",doi:"https://doi.org/10.1016/j.energy.2023.129229"},
  {n:2,t:1,y:"2022",first:true,title:"Efficient heat-exchange configuration for the sub-cooling cycle of a hydrogen liquefaction process",authors:["Sihwan Park","Wonjun Noh","Jaedeuk Park","Jinwoo Park*","Inkyu Lee*"],venue:"Energies",doi:"https://doi.org/10.3390/en15134560"},
- {n:1,t:1,y:"2022",title:"Comparative design, thermodynamic and techno-economic analysis of utilizing LNG cold energy for hydrogen liquefaction processes",authors:["Wonjun Noh","Sihwan Park","Junghwan Kim*","Inkyu Lee*"],venue:"International Journal of Energy Research",doi:"https://doi.org/10.1002/er.8064"}
+ {n:1,t:1,y:"2022",title:"Comparative design, thermodynamic and techno-economic analysis of utilizing LNG cold energy for hydrogen liquefaction processes",authors:["Wonjun Noh","Sihwan Park","Junghwan Kim*","Inkyu Lee*"],venue:"International Journal of Energy Research",doi:"https://doi.org/10.1002/er.8064"},
+ {n:0,t:1,y:"2021",title:"Design and analysis of hydrogen production and liquefaction process by using liquefied natural gas",authors:["Wonjun Noh","Sihwan Park","Inkyu Lee*"],venue:"Korean Chemical Engineering Research, 59(2), 1–9 (domestic journal)"}
 ];
 const esc=s=>s.replace(/&/g,'&amp;');
 function renderAuthors(a){return a.map(x=>x.startsWith("Sihwan Park")?`<span class="me">${x}</span>`:x).join(", ");}
