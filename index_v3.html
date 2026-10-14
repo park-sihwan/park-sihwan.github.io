@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sihwan Park — Sustainable Process Systems Design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700&family=Inter:wght@400;450;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F8FAFC;
+    --paper:#FFFFFF;
+    --ink:#0F1D2E;
+    --ink-soft:#2C3E52;
+    --muted:#5C6C80;
+    --dim:#8A98AA;
+    --line:#E3E9F0;
+    --line-soft:#EEF2F7;
+    --blue:#1866B4;
+    --blue-deep:#0E4C8C;
+    --cyan:#2AA0C4;
+    --warm:#C98A5B;
+    --green:#1E8A66;
+    --radius:3px;
+    --maxw:1080px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--bg);color:var(--ink-soft);
+    font-family:'Inter',sans-serif;font-weight:400;line-height:1.62;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--blue);color:#fff}
+  :focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+  /* nav (tabs) */
+  nav{
+    position:sticky;top:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:0 clamp(16px,5vw,48px);
+    background:rgba(248,250,252,.9);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{font-family:'Spectral';font-weight:600;font-size:17px;letter-spacing:-.01em;color:var(--ink);display:flex;align-items:center;gap:10px;padding:16px 0;white-space:nowrap}
+  .brand .dot{width:6px;height:6px;border-radius:50%;background:var(--blue)}
+  .tabs{display:flex;gap:4px;font-family:'IBM Plex Mono';font-size:12.5px;letter-spacing:.02em}
+  .tabs a{color:var(--muted);padding:18px 12px 16px;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;white-space:nowrap}
+  .tabs a:hover{color:var(--blue)}
+  .tabs a[aria-current="page"]{color:var(--blue);border-bottom-color:var(--blue);font-weight:500}
+  @media(max-width:640px){
+    nav{flex-direction:column;align-items:stretch;gap:0}
+    .brand{padding:12px 0 4px}
+    .tabs{overflow-x:auto;scrollbar-width:none;margin:0 -4px}
+    .tabs::-webkit-scrollbar{display:none}
+    .tabs a{padding:10px 10px 10px}
+  }
+
+  .page{display:none;animation:fade .35s ease}
+  .page.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @media(prefers-reduced-motion:reduce){.page{animation:none}}
+
+  section{padding:clamp(56px,8vw,92px) clamp(16px,5vw,48px)}
+  .wrap{max-width:var(--maxw);margin:0 auto}
+  .eyebrow{font-family:'IBM Plex Mono';font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .eyebrow::before{content:"";width:24px;height:1px;background:var(--blue)}
+  h2.section-title{font-family:'Spectral';font-weight:600;font-size:clamp(28px,4vw,40px);letter-spacing:-.01em;line-height:1.12;color:var(--ink);margin-bottom:14px}
+  .more{font-family:'IBM Plex Mono';font-size:12.5px;color:var(--blue);border-bottom:1px solid transparent;transition:border-color .2s}
+  .more:hover{border-bottom-color:var(--blue)}
+
+  /* home hero */
+  .hero{padding-top:clamp(56px,9vw,104px);padding-bottom:clamp(40px,6vw,64px)}
+  .hero-eyebrow{font-family:'IBM Plex Mono';font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+  .hero-eyebrow b{color:var(--blue);font-weight:500}
+  h1{font-family:'Spectral';font-weight:600;font-size:clamp(32px,5.2vw,54px);line-height:1.1;letter-spacing:-.02em;color:var(--ink);margin-bottom:22px;max-width:860px}
+  h1 .c1{color:var(--blue);font-style:italic;font-weight:500}
+  h1 .c2{color:var(--green);font-style:italic;font-weight:500}
+  .lede{font-size:clamp(15px,2vw,17.5px);color:var(--muted);max-width:640px;margin-bottom:28px}
+  .lede b{color:var(--ink);font-weight:500}
+  .hero-links{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  .btn{font-family:'IBM Plex Mono';font-size:13px;padding:10px 16px;border:1px solid var(--line);border-radius:var(--radius);color:var(--ink);background:var(--paper);transition:all .2s;display:inline-flex;align-items:center;gap:8px}
+  .btn:hover{border-color:var(--blue);color:var(--blue)}
+  .btn.primary{background:var(--blue);color:#fff;border-color:var(--blue);font-weight:500}
+  .btn.primary:hover{background:var(--blue-deep);color:#fff;border-color:var(--blue-deep)}
+
+  /* stats */
+  .stats{border:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);background:var(--paper)}
+  .stat{padding:22px clamp(14px,2.6vw,28px);border-right:1px solid var(--line)}
+  .stat:last-child{border-right:none}
+  .stat .num{font-family:'Spectral';font-weight:600;font-size:clamp(28px,4vw,38px);color:var(--blue);letter-spacing:-.01em;line-height:1}
+  .stat .lab{font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.05em;color:var(--muted);text-transform:uppercase;margin-top:9px}
+  @media(max-width:640px){.stats{grid-template-columns:1fr 1fr}.stat:nth-child(2){border-right:none}.stat:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+
+  /* home summary blocks */
+  .home-block{padding-top:0}
+  .block-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-bottom:18px;border-bottom:1px solid var(--line);padding-bottom:12px}
+  .block-head h2{font-family:'Spectral';font-weight:600;font-size:clamp(22px,3vw,27px);color:var(--ink);letter-spacing:-.01em}
+  .glance{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .gcard{background:var(--paper);border:1px solid var(--line);display:grid;grid-template-columns:210px 1fr;transition:border-color .2s,transform .2s}
+  .gcard:hover{border-color:var(--tc);transform:translateY(-2px)}
+  .gcard .thumb{background:#fff;border-right:1px solid var(--line-soft);display:flex;align-items:center;justify-content:center;padding:10px}
+  .gcard .thumb img{max-width:100%;max-height:120px;object-fit:contain}
+  .gcard .gbody{padding:20px 22px}
+  .gcard .gbody .badge{font-family:'IBM Plex Mono';font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--tc)}
+  .gcard .gbody h3{font-family:'Spectral';font-weight:600;font-size:19px;color:var(--ink);margin:6px 0 6px;line-height:1.25}
+  .gcard .gbody p{font-size:13.5px;color:var(--muted)}
+  .gcard .gbody .topics{font-family:'IBM Plex Mono';font-size:11.5px;color:var(--ink-soft);margin-top:10px}
+  .gcard.t1{--tc:var(--blue)} .gcard.t2{--tc:var(--green)}
+  @media(max-width:860px){.glance{grid-template-columns:1fr}}
+  @media(max-width:560px){.gcard{grid-template-columns:1fr}.gcard .thumb{border-right:none;border-bottom:1px solid var(--line-soft)}}
+
+  .two-col{display:grid;grid-template-columns:1.35fr 1fr;gap:48px}
+  @media(max-width:860px){.two-col{grid-template-columns:1fr;gap:44px}}
+  .mini-pub{padding:14px 0;border-bottom:1px solid var(--line)}
+  .mini-pub:last-child{border-bottom:none}
+  .mini-pub .t{font-family:'Spectral';font-weight:600;font-size:15.5px;color:var(--ink);line-height:1.35}
+  .mini-pub .m{font-size:12.5px;color:var(--muted);margin-top:4px}
+  .mini-pub .m .venue{font-style:italic;color:var(--ink-soft)}
+  .chip{font-family:'IBM Plex Mono';font-size:10px;padding:1px 6px;border-radius:var(--radius);border:1px solid;margin-right:6px;vertical-align:middle;letter-spacing:.03em}
+  .chip.st{color:var(--warm);border-color:var(--warm)}
+  .chip.th1{color:var(--blue);border-color:rgba(24,102,180,.4)}
+  .chip.th2{color:var(--green);border-color:rgba(30,138,102,.4)}
+
+  /* research */
+  .research-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line)}
+  .rcard{background:var(--paper);padding:32px clamp(22px,3vw,34px);position:relative;transition:background .2s;overflow:hidden}
+  .rcard:hover{background:#FCFDFE}
+  .rcard .idx{font-family:'IBM Plex Mono';font-size:11.5px;color:var(--cyan);letter-spacing:.08em}
+  .rcard h3{font-family:'Spectral';font-weight:600;font-size:21px;margin:11px 0 12px;letter-spacing:-.01em;color:var(--ink)}
+  .rcard p{font-size:14.5px;color:var(--muted);margin-bottom:16px}
+  .tag{font-family:'IBM Plex Mono';font-size:11px;color:var(--dim);display:inline-block;padding:3px 9px;border:1px solid var(--line);border-radius:var(--radius);margin-right:6px;margin-top:4px}
+  .rcard::after{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--blue);transform:scaleY(0);transform-origin:top;transition:transform .3s}
+  .rcard:hover::after{transform:scaleY(1)}
+  @media(max-width:680px){.research-grid{grid-template-columns:1fr}}
+  .toolset{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px}
+  .toolset span{font-family:'IBM Plex Mono';font-size:11.5px;color:var(--muted);padding:4px 10px;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper)}
+
+  .theme-nav{display:flex;flex-wrap:wrap;gap:8px;margin:26px 0 8px}
+  .theme-nav a{font-family:'IBM Plex Mono';font-size:12px;padding:7px 14px;border:1px solid var(--line);border-radius:var(--radius);background:var(--paper);color:var(--muted);transition:all .2s}
+  .theme-nav a:hover{color:var(--ink);border-color:var(--dim)}
+  .theme{margin-top:52px;scroll-margin-top:80px}
+  .theme-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-bottom:20px}
+  .theme-badge{font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#fff;background:var(--tc);padding:4px 10px;border-radius:var(--radius)}
+  .theme-head h3{font-family:'Spectral';font-weight:600;font-size:clamp(22px,3vw,27px);letter-spacing:-.01em;color:var(--ink)}
+  .theme-when{font-family:'IBM Plex Mono';font-size:12px;color:var(--dim);margin-left:auto}
+  .theme-intro{font-size:15px;color:var(--muted);max-width:760px;margin:-6px 0 22px}
+  .theme.t1{--tc:var(--blue)}
+  .theme.t2{--tc:var(--green)}
+  .theme.tm{--tc:var(--warm)}
+  .theme .rcard::after{background:var(--tc)}
+  .theme .rcard .idx{color:var(--tc)}
+  .rcard.has-fig{padding:0;display:flex;flex-direction:column}
+  .rcard figure{height:220px;padding:18px;border-bottom:1px solid var(--line-soft);background:#fff;display:flex;align-items:center;justify-content:center}
+  .rcard figure img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+  .rcard .rbody{padding:26px clamp(22px,3vw,30px) 28px;display:flex;flex-direction:column;flex:1}
+  .rcard .rbody h3{margin-top:9px}
+  .rcard .outcome{font-family:'IBM Plex Mono';font-size:12px;color:var(--tc);margin:auto 0 12px;padding-top:4px}
+  .methods-grid{grid-template-columns:repeat(3,1fr)}
+  .methods-grid figure{height:170px}
+  @media(max-width:860px){.methods-grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:680px){.methods-grid{grid-template-columns:1fr}.theme-when{margin-left:0}}
+
+  /* publications */
+  .pub-controls{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+  .filter{font-family:'IBM Plex Mono';font-size:12px;padding:7px 14px;border:1px solid var(--line);border-radius:var(--radius);color:var(--muted);background:var(--paper);cursor:pointer;transition:all .2s}
+  .filter:hover{color:var(--ink);border-color:var(--dim)}
+  .filter.active{background:var(--blue);color:#fff;border-color:var(--blue);font-weight:500}
+  .filter i{font-style:normal;font-size:10.5px;color:var(--dim);letter-spacing:0}
+  .filter.active i{color:rgba(255,255,255,.7)}
+  .pub-count{font-family:'IBM Plex Mono';font-size:12px;color:var(--dim);margin-bottom:6px;letter-spacing:.02em}
+  .pub-count b{color:var(--blue);font-weight:500}
+  .pub{display:grid;grid-template-columns:60px 1fr;gap:20px;padding:22px 4px;border-top:1px solid var(--line)}
+  .pub:last-child{border-bottom:1px solid var(--line)}
+  .pub .yr{font-family:'IBM Plex Mono';font-size:13px;color:var(--blue);padding-top:2px}
+  .pub .body .title{font-family:'Spectral';font-size:17px;font-weight:600;color:var(--ink);line-height:1.4;margin-bottom:7px;letter-spacing:-.005em}
+  .pub .body .title.first::before{content:"1st author";font-family:'IBM Plex Mono';font-size:10px;color:var(--warm);border:1px solid var(--warm);padding:1px 6px;border-radius:var(--radius);margin-right:9px;vertical-align:middle;letter-spacing:.03em;font-weight:400}
+  .pub .body .authors{font-size:13px;color:var(--dim);margin-bottom:6px}
+  .authors .me{color:var(--ink-soft);font-weight:500;border-bottom:1px solid var(--cyan)}
+  .pub .body .meta{font-size:13.5px;color:var(--muted)}
+  .pub .body .meta .venue{font-style:italic;color:var(--ink-soft)}
+  .pub a.doi{font-family:'IBM Plex Mono';font-size:11.5px;color:var(--cyan)}
+  .pub a.doi:hover{color:var(--blue)}
+  .status-tag{font-family:'IBM Plex Mono';font-size:11px;color:var(--warm);border:1px solid var(--warm);padding:2px 8px;border-radius:var(--radius);margin-right:8px}
+  @media(max-width:560px){.pub{grid-template-columns:1fr;gap:6px}.pub .yr{padding-top:0}}
+
+  /* about */
+  .about-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:56px}
+  .about-block{margin-bottom:32px}
+  .about-block h4{font-family:'IBM Plex Mono';font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:15px}
+  .tl-item{padding-bottom:16px;border-bottom:1px solid var(--line);margin-bottom:16px}
+  .tl-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+  .tl-item .role{font-family:'Spectral';font-weight:600;font-size:17px;color:var(--ink)}
+  .tl-item .org{font-size:14px;color:var(--muted);margin-top:3px}
+  .tl-item .when{font-family:'IBM Plex Mono';font-size:12px;color:var(--dim);margin-top:5px}
+  .tl-item .note{font-size:13px;color:var(--dim);margin-top:6px;font-style:italic}
+  .award{display:flex;gap:14px;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--line)}
+  .award:last-child{border-bottom:none}
+  .award .yr{font-family:'IBM Plex Mono';font-size:12px;color:var(--blue);flex-shrink:0;width:58px}
+  .award .desc{font-size:14px;color:var(--muted)}
+  @media(max-width:760px){.about-grid{grid-template-columns:1fr;gap:40px}}
+
+  /* contact footer (all pages) */
+  .contact{background:var(--paper);border-top:1px solid var(--line)}
+  .contact-inner{display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px;align-items:flex-end}
+  .contact .email{font-family:'IBM Plex Mono';font-size:clamp(15px,2.4vw,19px);color:var(--blue);border-bottom:1px solid var(--blue)}
+  .contact-meta{font-family:'IBM Plex Mono';font-size:12.5px;color:var(--dim);line-height:1.9;text-align:right}
+  .contact-meta a{color:var(--muted)}.contact-meta a:hover{color:var(--blue)}
+  @media(max-width:560px){.contact-meta{text-align:left}}
+  footer{padding:22px clamp(16px,5vw,48px);border-top:1px solid var(--line);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:'IBM Plex Mono';font-size:11.5px;color:var(--dim);background:var(--bg)}
+</style>
+</head>
+<body>
+
+<nav aria-label="Main">
+  <a href="#home" class="brand"><span class="dot"></span>Sihwan Park</a>
+  <div class="tabs">
+    <a href="#home" data-tab="home">Home</a>
+    <a href="#research" data-tab="research">Research</a>
+    <a href="#publications" data-tab="publications">Publications</a>
+    <a href="#about" data-tab="about">About</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- ============ HOME ============ -->
+<div class="page" id="page-home">
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-eyebrow">Postdoctoral Researcher · <b>Korea University</b></div>
+      <h1>Designing low-carbon processes — from <span class="c1">liquid hydrogen</span> to <span class="c2">CO₂-derived fuels</span>.</h1>
+      <p class="lede">I'm <b>Sihwan Park (박시환)</b>, a process systems engineer. My Ph.D. work redesigned <b>hydrogen liquefaction</b> and cryogenic energy systems; at Korea University I now design routes that turn <b>captured CO₂ and waste into green methanol and hydrogen</b>, judged on cost and carbon together.</p>
+      <div class="hero-links">
+        <a href="#research" class="btn primary">Research themes →</a>
+        <a href="#publications" class="btn">Publications</a>
+        <a href="https://scholar.google.com/citations?user=vERMi8YAAAAJ&hl=ko" target="_blank" rel="noopener" class="btn">Google Scholar ↗</a>
+        <a href="https://orcid.org/0009-0003-7409-103X" target="_blank" rel="noopener" class="btn">ORCID ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-block" style="padding-bottom:48px">
+    <div class="wrap">
+      <div class="stats">
+        <div class="stat"><div class="num">16</div><div class="lab">Journal papers</div></div>
+        <div class="stat"><div class="num">10</div><div class="lab">First-author</div></div>
+        <div class="stat"><div class="num">2</div><div class="lab">Manuscripts submitted / in prep.</div></div>
+        <div class="stat"><div class="num">4</div><div class="lab">Academic awards</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-block">
+    <div class="wrap">
+      <div class="block-head"><h2>Research at a glance</h2><a href="#research" class="more">All research →</a></div>
+      <div class="glance">
+        <a class="gcard t1" href="#research/theme1">
+          <div class="thumb"><img src="img/h2-liquefaction.png" alt=""></div>
+          <div class="gbody">
+            <div class="badge">Core Theme 1 · Ph.D.</div>
+            <h3>Liquid Hydrogen &amp; Cryogenic Energy</h3>
+            <p>Cutting the energy cost of hydrogen liquefaction and putting the cold energy back to work.</p>
+            <div class="topics">H₂ liquefaction · Cold-energy recovery · Energy storage</div>
+          </div>
+        </a>
+        <a class="gcard t2" href="#research/theme2">
+          <div class="thumb"><img src="img/rcc-methanol-final.png" alt=""></div>
+          <div class="gbody">
+            <div class="badge">Core Theme 2 · Now</div>
+            <h3>Low-Carbon Fuels from CO₂ &amp; Waste</h3>
+            <p>Turning captured CO₂ and sewage sludge into green methanol and hydrogen, evaluated by eTEA.</p>
+            <div class="topics">CCU methanol · Sludge-to-H₂ · eTEA</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-block">
+    <div class="wrap two-col">
+      <div>
+        <div class="block-head"><h2>Recent work</h2><a href="#publications" class="more">All publications →</a></div>
+        <div id="recent"></div>
+      </div>
+      <div>
+        <div class="block-head"><h2>Background</h2><a href="#about" class="more">Full background →</a></div>
+        <div class="tl-item">
+          <div class="role">Postdoctoral Researcher</div>
+          <div class="org">Korea University · Prof. Wangyun Won Group</div>
+          <div class="when">Mar 2026 — Present</div>
+        </div>
+        <div class="tl-item">
+          <div class="role">Ph.D., Chemical Engineering</div>
+          <div class="org">Pusan National University · Prof. Inkyu Lee</div>
+          <div class="when">2026</div>
+        </div>
+        <div class="tl-item">
+          <div class="role">B.S., Chemical &amp; Biomolecular Engineering</div>
+          <div class="org">Pusan National University</div>
+          <div class="when">2021</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ RESEARCH ============ -->
+<div class="page" id="page-research">
+  <section>
+    <div class="wrap">
+      <div class="eyebrow">Research themes</div>
+      <h2 class="section-title">Two core themes, one goal — processes that use less energy and emit less carbon.</h2>
+      <div class="theme-nav">
+        <a href="#research/theme1">Core Theme 1 · Liquid H₂</a>
+        <a href="#research/theme2">Core Theme 2 · CO₂ &amp; waste</a>
+        <a href="#research/methods">Methods</a>
+      </div>
+
+      <div class="theme t1" id="theme1">
+        <div class="theme-head">
+          <span class="theme-badge">Core Theme 1</span>
+          <h3>Liquid Hydrogen &amp; Cryogenic Energy</h3>
+          <span class="theme-when">Ph.D. · Pusan National University</span>
+        </div>
+        <p class="theme-intro">Liquefaction is the most energy-intensive step in the liquid-hydrogen value chain. I redesign the cooling cycles and put the cold energy they create back to work.</p>
+        <div class="research-grid">
+          <div class="rcard has-fig">
+            <figure><img src="img/h2-liquefaction.png" alt="Hydrogen liquefaction process design" loading="lazy"></figure>
+            <div class="rbody">
+              <div class="idx">1-1 / PROCESS DESIGN</div>
+              <h3>Hydrogen Liquefaction</h3>
+              <p>Conventional liquefiers operate far from their thermodynamic minimum work. I redesign the cycle itself — triple-pressure Claude cycles, bypass configurations, and flashing mixed-refrigerant precooling — to cut exergy losses and specific energy consumption.</p>
+              <div class="outcome">→ Minimize energy consumption</div>
+              <div><span class="tag">Aspen HYSYS</span><span class="tag">Exergy analysis</span><span class="tag">Optimization</span></div>
+            </div>
+          </div>
+          <div class="rcard has-fig">
+            <figure><img src="img/energy-storage.png" alt="Hydrogen and methanol energy storage systems" loading="lazy"></figure>
+            <div class="rbody">
+              <div class="idx">1-2 / SYSTEMS</div>
+              <h3>Cold-Energy Recovery &amp; Energy Storage</h3>
+              <p>Which carrier stores large-scale renewable energy best? I compare hydrogen- and methanol-based storage on thermodynamic and economic grounds, and recover LNG and liquid-hydrogen cold energy for power and chemical production.</p>
+              <div class="outcome">→ Maximize energy recovery</div>
+              <div><span class="tag">H₂ vs MeOH</span><span class="tag">LNG / LH₂ cold energy</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="theme t2" id="theme2">
+        <div class="theme-head">
+          <span class="theme-badge">Core Theme 2</span>
+          <h3>Low-Carbon Fuels from CO₂ &amp; Waste</h3>
+          <span class="theme-when">Postdoc · Korea University</span>
+        </div>
+        <p class="theme-intro">My current work turns captured CO₂ and wet waste into green methanol and hydrogen. Each route is judged on cost and life-cycle emissions together through environmental techno-economic assessment (eTEA).</p>
+        <div class="research-grid">
+          <div class="rcard has-fig">
+            <figure><img src="img/rcc-methanol-final.png" alt="Conventional CO2 capture and reduction route compared with reactive carbon capture for methanol production" loading="lazy"></figure>
+            <div class="rbody">
+              <div class="idx">2-1 / CCU</div>
+              <h3>Green Methanol from Captured CO₂</h3>
+              <p>Amine capture spends most of its energy on solvent regeneration. Reactive carbon capture electroreduces the absorbed CO₂ directly, removing the stripper and CO₂ compressor. I compare it with conventional CCU routes to methanol and identify the electrolyzer performance at which it wins.</p>
+              <div class="outcome">→ Cost-competitive, carbon-negative methanol</div>
+              <div><span class="tag">CO₂ electroreduction</span><span class="tag">eTEA</span><span class="tag">LCA</span></div>
+            </div>
+          </div>
+          <div class="rcard has-fig">
+            <figure><img src="img/sludge-h2.png" alt="Sewage sludge SCWG integrated with SOEC for hydrogen" loading="lazy"></figure>
+            <div class="rbody">
+              <div class="idx">2-2 / WASTE-TO-H₂</div>
+              <h3>Hydrogen from Sewage Sludge</h3>
+              <p>Supercritical water gasification handles wet sludge without drying, and its product gas can either heat a solid oxide electrolyzer or be reformed into extra hydrogen. I design integrated SCWG–SOEC systems and quantify this fuel-versus-resource trade-off.</p>
+              <div class="outcome">→ Waste valorization, low-carbon H₂</div>
+              <div><span class="tag">SCWG</span><span class="tag">SOEC</span><span class="tag">Heat integration</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="theme tm" id="methods">
+        <div class="theme-head">
+          <span class="theme-badge">Cross-cutting methods</span>
+          <h3>Evaluation &amp; Modeling</h3>
+        </div>
+        <div class="research-grid methods-grid">
+          <div class="rcard has-fig">
+            <figure><img src="img/ctea.png" alt="Carbon-techno-economic analysis" loading="lazy"></figure>
+            <div class="rbody">
+              <div class="idx">M-1 / METHODOLOGY</div>
+              <h3>Carbon-Techno-Economic Analysis</h3>
+              <p>Cost and carbon are usually optimized separately. CTEA folds carbon-emission cost directly into techno-economic optimization, so a process can be tuned for economics and climate impact at once.</p>
+            </div>
+          </div>
+          <div class="rcard has-fig">
+            <figure><img src="img/hybrid-ai.png" alt="Hybrid first-principles and machine-learning modeling" loading="lazy"></figure>
+            <div class="rbody">
+              <div class="idx">M-2 / DATA-DRIVEN</div>
+              <h3>Hybrid AI Modeling</h3>
+              <p>Purely data-driven models break outside their training range. I combine first-principles models with machine learning for surrogate and control frameworks that stay reliable on real plants.</p>
+            </div>
+          </div>
+          <div class="rcard" style="display:flex;flex-direction:column;justify-content:center">
+            <div class="idx">TOOLSET</div>
+            <div class="toolset" style="margin-top:14px">
+              <span>Aspen HYSYS</span><span>Aspen Plus</span><span>Python</span><span>MATLAB</span>
+              <span>Genetic Algorithm</span><span>Bayesian Opt.</span><span>PSO</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ PUBLICATIONS ============ -->
+<div class="page" id="page-publications">
+  <section style="background:var(--paper)">
+    <div class="wrap">
+      <div class="eyebrow">International journal papers</div>
+      <h2 class="section-title">Journal papers &amp; manuscripts</h2>
+      <div class="pub-controls" id="pubfilters" style="margin-top:28px">
+        <button class="filter active" data-f="all">All <i></i></button>
+        <button class="filter" data-f="first">First-author <i></i></button>
+        <button class="filter" data-f="t1">Theme 1 · LH₂ <i></i></button>
+        <button class="filter" data-f="t2">Theme 2 · CO₂ &amp; waste <i></i></button>
+        <button class="filter" data-f="2026">2026 <i></i></button>
+        <button class="filter" data-f="2025">2025 <i></i></button>
+        <button class="filter" data-f="2024">2024 <i></i></button>
+        <button class="filter" data-f="2023">2023 <i></i></button>
+        <button class="filter" data-f="2022">2022 <i></i></button>
+      </div>
+      <div class="pub-count" id="pubcount" aria-live="polite"></div>
+      <div id="publist"></div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ ABOUT ============ -->
+<div class="page" id="page-about">
+  <section>
+    <div class="wrap">
+      <div class="eyebrow">About</div>
+      <h2 class="section-title">Background</h2>
+      <div class="about-grid" style="margin-top:40px">
+        <div>
+          <div class="about-block">
+            <h4>Position</h4>
+            <div class="tl-item">
+              <div class="role">Postdoctoral Researcher</div>
+              <div class="org">Institute of Chemical Engineering Convergence Systems, Korea University — Prof. Wangyun Won Group</div>
+              <div class="when">Mar 2026 — Present</div>
+            </div>
+          </div>
+          <div class="about-block">
+            <h4>Education</h4>
+            <div class="tl-item">
+              <div class="role">Ph.D., Chemical Engineering</div>
+              <div class="org">Pusan National University · Advisor: Prof. Inkyu Lee</div>
+              <div class="when">2026</div>
+              <div class="note">Thesis: Design and Comparative Analysis of Efficient and Economic Hydrogen Liquefaction Processes via Structural Innovations</div>
+            </div>
+            <div class="tl-item">
+              <div class="role">B.S., Chemical &amp; Biomolecular Engineering</div>
+              <div class="org">Pusan National University</div>
+              <div class="when">2021</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="about-block">
+            <h4>Awards &amp; Honors</h4>
+            <div class="award"><div class="yr">2026.06</div><div class="desc">대학원학술상 — Pusan National University</div></div>
+            <div class="award"><div class="yr">2025.12</div><div class="desc">우수논문상 — KIChE, Busan·Gyeongnam Chapter</div></div>
+            <div class="award"><div class="yr">2024.11</div><div class="desc">우수논문상 — Korean Society of Industrial &amp; Engineering Chemistry</div></div>
+            <div class="award"><div class="yr">2023.09</div><div class="desc">우수포스터발표상 — Korean Society for Clean Technology</div></div>
+          </div>
+          <div class="about-block">
+            <h4>Core methods</h4>
+            <div class="toolset">
+              <span>Process simulation</span><span>Energy &amp; exergy analysis</span>
+              <span>Techno-economic analysis</span><span>CTEA</span><span>LCA</span><span>eTEA</span>
+              <span>Sensitivity &amp; uncertainty</span><span>Global optimization</span><span>ML surrogates</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+</main>
+
+<section class="contact" style="padding-top:40px;padding-bottom:40px">
+  <div class="wrap contact-inner">
+    <a href="mailto:sihwan@korea.ac.kr" class="email">sihwan@korea.ac.kr</a>
+    <div class="contact-meta">
+      Korea University<br>
+      145 Anam-ro, Seongbuk-gu<br>
+      Seoul 02841, Republic of Korea<br>
+      <a href="https://scholar.google.com/citations?user=vERMi8YAAAAJ&hl=ko" target="_blank" rel="noopener">Scholar</a> ·
+      <a href="https://orcid.org/0009-0003-7409-103X" target="_blank" rel="noopener">ORCID</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Sihwan Park</span>
+  <span>Sustainable Process Systems Design &amp; Optimization</span>
+</footer>
+
+<script>
+// t: 1 = Core Theme 1 (LH2 & cryogenic), 2 = Core Theme 2 (CO2 & waste); no t = methods only
+const pubs=[
+ {n:18,t:2,y:"2026",first:true,status:"In preparation",title:"Sustainable hydrogen production from sewage sludge via integrated solid oxide electrolysis: system-level analysis",authors:["Sihwan Park†","Vira Valasara†","Wangyun Won*"],note:"co-first"},
+ {n:17,t:2,y:"2026",first:true,status:"Submitted",title:"An integrated strategy for the production of methanol from flue gas with simultaneous CO₂ capture and electroreduction: process development and environmental techno-economic assessment",authors:["Sihwan Park","Sungil Yun","Byeongchan Ahn","Wangyun Won*"],venue:"Green Energy & Environment"},
+ {n:16,t:1,y:"2026",first:true,status:"Accepted",venue:"Applied Thermal Engineering",title:"Design and comprehensive thermodynamic and economic analysis of hydrogen liquefaction processes: from process to value-chain level",authors:["Sihwan Park","Wangyun Won*","Inkyu Lee*"]},
+ {n:15,t:1,y:"2026",title:"Utilization of liquid-hydrogen cold energy and electric heating in green olefin production: techno-economic and environmental analysis",authors:["Duho Kang","Hyeonju Cho","Sihwan Park","Inkyu Lee*"],venue:"Applied Thermal Engineering",doi:"https://doi.org/10.1016/j.applthermaleng.2026.132401"},
+ {n:14,t:2,y:"2026",title:"Co-utilization of CO₂ and biomass in sustainable methanol production: enhancing cost competitiveness and sustainability",authors:["Hyewon Jeong","Sihwan Park","Seoyeon Cho","Inkyu Lee*"],venue:"Energy Conversion and Management",doi:"https://doi.org/10.1016/j.enconman.2025.120602"},
+ {n:13,t:1,y:"2025",first:true,title:"Conceptual design for enhancing thermodynamic efficiency in hydrogen liquefaction based on a triple-pressure Claude cycle and bypass configuration",authors:["Sihwan Park","Duho Kang","Jeongheon Kim","Minseo Jeong","Haksung Kim","Moonsuk Choi","Inkyu Lee*"],venue:"Applied Thermal Engineering",doi:"https://doi.org/10.1016/j.applthermaleng.2025.127643"},
+ {n:12,t:1,y:"2025",first:true,title:"Thermodynamic efficiency by two-stage flashing mixed-refrigerant cycle for hydrogen precooling",authors:["Sihwan Park","Duho Kang","Jeongheon Kim","Minseo Jeong","Haksung Kim","Moonsuk Choi","Inkyu Lee*"],venue:"Applied Thermal Engineering",doi:"https://doi.org/10.1016/j.applthermaleng.2025.127288"},
+ {n:11,t:2,y:"2025",title:"CO₂ electrolysis-assisted CO₂ reduction and aromatic supply for sustainable aviation fuel production: cost optimization and future scenarios",authors:["Jeongheon Kim","Seungeun Kim","Sihwan Park","Inkyu Lee*"],venue:"Energy Conversion and Management",doi:"https://doi.org/10.1016/j.enconman.2025.120063"},
+ {n:10,t:1,y:"2025",first:true,title:"Enhancing the thermodynamic efficiency of hydrogen liquefaction via modifying the precooling cycle configuration",authors:["Sihwan Park","Jeongheon Kim","Minseo Jeong","Haksung Kim","Moonsuk Choi","Inkyu Lee*"],venue:"Applied Thermal Engineering",doi:"https://doi.org/10.1016/j.applthermaleng.2025.127047"},
+ {n:9,t:1,y:"2025",first:true,title:"Comparative analysis of hydrogen and methanol energy storage systems for large-scale applications: thermodynamic and economic perspectives",authors:["Sihwan Park","Jinwoo Park*","Inkyu Lee*"],venue:"International Journal of Hydrogen Energy",doi:"https://doi.org/10.1016/j.ijhydene.2025.03.248"},
+ {n:8,t:1,y:"2025",first:true,title:"Advanced hydrogen liquefaction with flashing mixed-refrigerant precooling: the role of nitrogen fraction in cooling-load distribution",authors:["Sihwan Park","Jeongheon Kim","Minseo Jeong","Haksung Kim","Inkyu Lee*"],venue:"Applied Thermal Engineering",doi:"https://doi.org/10.1016/j.applthermaleng.2024.125409"},
+ {n:7,y:"2025",first:true,title:"A hybrid framework of first-principles model and machine learning for optimizing control parameters in chemical processes",authors:["Wonjun Noh","Sihwan Park","Sojung Kim","Inkyu Lee*"],venue:"Journal of Industrial and Engineering Chemistry",doi:"https://doi.org/10.1016/j.jiec.2024.07.018",note:"co-first"},
+ {n:6,t:1,y:"2024",first:true,title:"Carbon sequestration with enhanced gas recovery (CSEGR) for a novel natural-gas value chain: synergy with cold-energy utilization",authors:["Dohee Kim","Sihwan Park","Inkyu Lee*","Jinwoo Park*"],venue:"Energy",doi:"https://doi.org/10.1016/j.energy.2024.133994",note:"co-first"},
+ {n:5,t:2,y:"2024",title:"Systems design and techno-economic analysis of a cryogenic carbon capture process integrated with an air separation unit for ATR blue-hydrogen production",authors:["Wonjun Noh","Sihwan Park","Yurim Kim","Jaewon Lee","Junghwan Kim","Inkyu Lee*"],venue:"Journal of Cleaner Production",doi:"https://doi.org/10.1016/j.jclepro.2024.142341"},
+ {n:4,t:2,y:"2024",first:true,title:"Cost-optimization methodology based on carbon-techno-economic analysis: application to post-combustion carbon capture",authors:["Sihwan Park","Haneul Mun","Jinwoo Park*","Inkyu Lee*"],venue:"Journal of Cleaner Production",doi:"https://doi.org/10.1016/j.jclepro.2023.139887"},
+ {n:3,t:1,y:"2023",title:"Liquid-hydrogen cold-energy recovery to enhance sustainability: optimal design of dual-stage power generation cycles",authors:["Haneul Mun","Sihwan Park","Inkyu Lee*"],venue:"Energy",doi:"https://doi.org/10.1016/j.energy.2023.129229"},
+ {n:2,t:1,y:"2022",first:true,title:"Efficient heat-exchange configuration for the sub-cooling cycle of a hydrogen liquefaction process",authors:["Sihwan Park","Wonjun Noh","Jaedeuk Park","Jinwoo Park*","Inkyu Lee*"],venue:"Energies",doi:"https://doi.org/10.3390/en15134560"},
+ {n:1,t:1,y:"2022",title:"Comparative design, thermodynamic and techno-economic analysis of utilizing LNG cold energy for hydrogen liquefaction processes",authors:["Wonjun Noh","Sihwan Park","Junghwan Kim*","Inkyu Lee*"],venue:"International Journal of Energy Research",doi:"https://doi.org/10.1002/er.8064"}
+];
+const esc=s=>s.replace(/&/g,'&amp;');
+function renderAuthors(a){return a.map(x=>x.startsWith("Sihwan Park")?`<span class="me">${x}</span>`:x).join(", ");}
+function matches(p,f){
+  if(f==='all')return true;
+  if(f==='first')return !!p.first;
+  if(f==='t1'||f==='t2')return p.t===+f[1];
+  return p.y===f;
+}
+function meta(p){
+  let m='';
+  if(p.status)m+=`<span class="status-tag">${p.status}</span>`;
+  if(p.venue)m+=`<span class="venue">${esc(p.venue)}</span>`;
+  if(p.doi)m+=` &nbsp;·&nbsp; <a class="doi" href="${p.doi}" target="_blank" rel="noopener">DOI ↗</a>`;
+  return m;
+}
+function render(list){
+  document.getElementById('publist').innerHTML=list.map(p=>`
+    <div class="pub">
+      <div class="yr">${p.y}</div>
+      <div class="body">
+        <div class="title ${p.first?'first':''}">${p.title}</div>
+        <div class="authors">${renderAuthors(p.authors)}${p.note?` · <span style="color:var(--warm)">${p.note}</span>`:''}</div>
+        <div class="meta">${meta(p)}</div>
+      </div>
+    </div>`).join('');
+}
+const labels={all:'all publications',first:'first-author papers',t1:'Theme 1 publications',t2:'Theme 2 publications'};
+function applyFilter(f){
+  document.querySelectorAll('#pubfilters .filter').forEach(x=>x.classList.toggle('active',x.dataset.f===f));
+  const list=pubs.filter(p=>matches(p,f));
+  render(list);
+  document.getElementById('pubcount').innerHTML=`Showing <b>${list.length}</b> ${labels[f]||(f+' publications')}`;
+}
+document.querySelectorAll('#pubfilters .filter').forEach(b=>{
+  b.querySelector('i').textContent=pubs.filter(p=>matches(p,b.dataset.f)).length;
+  b.addEventListener('click',()=>applyFilter(b.dataset.f));
+});
+applyFilter('all');
+
+// home: four most recent entries
+document.getElementById('recent').innerHTML=pubs.slice(0,4).map(p=>`
+  <div class="mini-pub">
+    <div class="t">${p.title}</div>
+    <div class="m">${p.t?`<span class="chip th${p.t}">Theme ${p.t}</span>`:''}${p.status?`<span class="chip st">${p.status}</span>`:''}${p.venue?`<span class="venue">${esc(p.venue)}</span> · `:''}${p.y}</div>
+  </div>`).join('');
+
+// tab routing: #home, #research, #research/theme2, #publications, #about
+const TABS=['home','research','publications','about'];
+function route(){
+  const [tab,anchor]=(location.hash.slice(1)||'home').split('/');
+  const t=TABS.includes(tab)?tab:'home';
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+t));
+  document.querySelectorAll('.tabs a').forEach(a=>{
+    if(a.dataset.tab===t)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');
+  });
+  const target=anchor&&document.getElementById(anchor);
+  if(target)requestAnimationFrame(()=>target.scrollIntoView({behavior:'smooth'}));
+  else window.scrollTo(0,0);
+  document.title=(t==='home'?'':t[0].toUpperCase()+t.slice(1)+' — ')+'Sihwan Park';
+}
+addEventListener('hashchange',route);
+route();
+</script>
+</body>
+</html>
